@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Aadit Saru</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#ff0080,#7928ca,#2afadf,#4facfe);
+background-size:400% 400%;
+animation:bgmove 10s infinite alternate;
+color:white;
+}
+
+@keyframes bgmove{
+0%{background-position:left;}
+100%{background-position:right;}
+}
+
+.container{
+width:90%;
+max-width:700px;
+padding:40px;
+text-align:center;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(15px);
+border-radius:25px;
+box-shadow:0 0 30px rgba(0,0,0,0.25);
+}
+
+h1{
+font-size:48px;
+margin-bottom:15px;
+}
+
+#message{
+font-size:28px;
+line-height:1.6;
+min-height:230px;
+padding:20px;
+}
+
+/* REAL TEXT APPEAR ANIMATION */
+.text-animate{
+animation:textAppear .7s ease;
+}
+
+@keyframes textAppear{
+0%{
+opacity:0;
+transform:translateY(35px) scale(.9);
+filter:blur(8px);
+}
+100%{
+opacity:1;
+transform:translateY(0) scale(1);
+filter:blur(0);
+}
+}
+
+button{
+padding:15px 35px;
+font-size:22px;
+border:none;
+border-radius:50px;
+cursor:pointer;
+background:white;
+color:#ff0080;
+font-weight:bold;
+transition:.3s;
+margin-top:15px;
+}
+
+button:hover{
+transform:scale(1.08);
+}
+
+.heart{
+position:absolute;
+font-size:24px;
+animation:float 8s linear infinite;
+opacity:.7;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:0;}
+20%{opacity:1;}
+100%{transform:translateY(-120px);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>🎂 Happy Birthday 🎂</h1>
+<h1 style="font-size:38px;">AADIT SARU</h1>
+
+<div id="message" class="text-animate">
+Click Next For Birthday Wishes 💖
+</div>
+
+<button id="mainBtn" onclick="nextWish()">Next ➜</button>
+
+</div>
+
+<script>
+const wishes = [
+
+`🎉 Dear Aadit Saru,<br><br>
+Today is your special day and the world feels brighter because you were born.`,
+
+`🎂 Wishing you unlimited happiness, success, health and laughter forever.`,
+
+`🌟 May every dream you dream become reality and every goal become success.`,
+
+`🚀 You are talented, amazing and capable of achieving anything.`,
+
+`💖 May life always bring you joy, peace and love.`,
+
+`🎁 Stay awesome, stay kind and stay legendary forever.`,
+
+`🌈 Keep smiling, keep shining and keep growing.`,
+
+`🎊 Another year stronger, wiser and greater.`,
+
+`✨ You are valuable, loved and meant for greatness.`,
+
+`🎂 HAPPY BIRTHDAY AADIT SARU 🎂<br><br>
+May this year be your best year ever! 🌟`
+];
+
+let i = 0;
+const msg = document.getElementById("message");
+
+function animateText(text){
+msg.classList.remove("text-animate");
+void msg.offsetWidth; /* restart animation */
+msg.innerHTML = text;
+msg.classList.add("text-animate");
+}
+
+function nextWish(){
+
+if(i < wishes.length){
+animateText(wishes[i]);
+i++;
+}
+
+if(i === wishes.length){
+setTimeout(()=>{
+animateText(`🏁 THE END 🏁<br><br>Hope you loved all the wishes 💖`);
+document.getElementById("mainBtn").innerHTML="Restart 🔄";
+document.getElementById("mainBtn").onclick=restartWishes;
+},800);
+}
+}
+
+function restartWishes(){
+i = 0;
+animateText("Click Next For Birthday Wishes 💖");
+document.getElementById("mainBtn").innerHTML="Next ➜";
+document.getElementById("mainBtn").onclick=nextWish;
+}
+
+setInterval(()=>{
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="💖";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=(20+Math.random()*20)+"px";
+heart.style.animationDuration=(5+Math.random()*4)+"s";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),9000);
+},500);
+</script>
+
+</body>
+</html>
