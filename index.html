@@ -10,89 +10,173 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial, sans-serif;
+font-family:Arial;
 }
 
 body{
 height:100vh;
 overflow:hidden;
+background:#000;
+color:white;
+}
+
+/* INTRO */
+#intro{
+position:absolute;
+inset:0;
 display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:#000;
+}
+
+.dot{
+width:12px;
+height:12px;
+background:white;
+border-radius:50%;
+animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+50%{transform:scale(2);}
+}
+
+.cake{
+font-size:120px;
+opacity:0;
+transform:scale(0);
+animation:pop 1.2s forwards;
+animation-delay:1s;
+}
+
+@keyframes pop{
+70%{transform:scale(1.2);opacity:1;}
+100%{transform:scale(1);opacity:1;}
+}
+
+.question{
+font-size:32px;
+margin-top:20px;
+opacity:0;
+animation:fade 1s forwards;
+animation-delay:2s;
+}
+
+.btns{
+margin-top:25px;
+display:flex;
+gap:20px;
+opacity:0;
+animation:fade 1s forwards;
+animation-delay:2.7s;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(20px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+button{
+padding:14px 28px;
+font-size:20px;
+border:none;
+border-radius:40px;
+cursor:pointer;
+font-weight:bold;
+}
+
+#yesBtn{
+background:white;
+color:black;
+transition:.3s;
+z-index:2;
+}
+
+#yesBtn.big{
+transform:scale(2.4);
+background:#00ff88;
+color:black;
+box-shadow:0 0 30px #00ff88;
+}
+
+#noBtn{
+background:red;
+color:white;
+position:fixed;
+z-index:10;
+}
+
+.bubble{
+position:absolute;
+top:-65px;
+left:-10px;
+background:white;
+color:red;
+padding:8px 12px;
+border-radius:15px;
+font-weight:bold;
+display:none;
+}
+
+/* MAIN */
+#main{
+display:none;
+height:100vh;
 justify-content:center;
 align-items:center;
 background:linear-gradient(135deg,#ff0080,#7928ca,#2afadf,#4facfe);
 background-size:400% 400%;
-animation:bgmove 10s infinite alternate;
-color:white;
+animation:bg 10s infinite alternate;
 }
 
-@keyframes bgmove{
+@keyframes bg{
 0%{background-position:left;}
 100%{background-position:right;}
 }
 
-.container{
+.box{
 width:90%;
 max-width:700px;
 padding:40px;
 text-align:center;
 background:rgba(255,255,255,0.12);
+border-radius:20px;
 backdrop-filter:blur(15px);
-border-radius:25px;
-box-shadow:0 0 30px rgba(0,0,0,0.25);
-}
-
-h1{
-font-size:48px;
-margin-bottom:15px;
 }
 
 #message{
-font-size:28px;
-line-height:1.6;
-min-height:230px;
+font-size:26px;
+min-height:200px;
 padding:20px;
 }
 
-/* REAL TEXT APPEAR ANIMATION */
-.text-animate{
-animation:textAppear .7s ease;
+.text-anim{
+animation:show .6s ease;
 }
 
-@keyframes textAppear{
-0%{
-opacity:0;
-transform:translateY(35px) scale(.9);
-filter:blur(8px);
-}
-100%{
-opacity:1;
-transform:translateY(0) scale(1);
-filter:blur(0);
-}
+@keyframes show{
+from{opacity:0;transform:translateY(20px);filter:blur(8px);}
+to{opacity:1;transform:translateY(0);filter:blur(0);}
 }
 
-button{
-padding:15px 35px;
-font-size:22px;
+.mainBtn{
+margin-top:15px;
+padding:12px 25px;
+border-radius:30px;
 border:none;
-border-radius:50px;
+font-size:20px;
 cursor:pointer;
 background:white;
 color:#ff0080;
-font-weight:bold;
-transition:.3s;
-margin-top:15px;
 }
 
-button:hover{
-transform:scale(1.08);
-}
-
+/* HEARTS */
 .heart{
 position:absolute;
-font-size:24px;
+font-size:22px;
 animation:float 8s linear infinite;
-opacity:.7;
 }
 
 @keyframes float{
@@ -105,87 +189,127 @@ opacity:.7;
 
 <body>
 
-<div class="container">
-<h1>🎂 Happy Birthday 🎂</h1>
-<h1 style="font-size:38px;">AADIT SARU</h1>
+<!-- INTRO -->
+<div id="intro">
 
-<div id="message" class="text-animate">
-Click Next For Birthday Wishes 💖
+<div class="dot"></div>
+<div class="cake">🎂</div>
+
+<div class="question">Wish me Happy Birthday?</div>
+
+<div class="btns">
+<button id="yesBtn" onclick="startMain()">YES 💖</button>
+
+<div style="position:relative;">
+<button id="noBtn" onclick="moveNo()">NO</button>
+<div class="bubble" id="bubble">Think Again!</div>
 </div>
 
-<button id="mainBtn" onclick="nextWish()">Next ➜</button>
+</div>
+</div>
 
+<!-- MAIN -->
+<div id="main">
+<div class="box">
+
+<h1>🎂 HAPPY BIRTHDAY 🎂</h1>
+<h2>AADIT SARU</h2>
+
+<div id="message" class="text-anim">Click Next 💖</div>
+
+<button class="mainBtn" onclick="nextWish()">Next ➜</button>
+
+</div>
 </div>
 
 <script>
+
+/* INTRO NO BUTTON EDGE MOVEMENT */
+let count = 0;
+let pos = 0;
+
+function moveNo(){
+
+let no = document.getElementById("noBtn");
+let yes = document.getElementById("yesBtn");
+let bubble = document.getElementById("bubble");
+
+if(count >= 10){
+no.style.display="none";
+bubble.style.display="none";
+yes.classList.add("big");
+yes.innerHTML="YES 💖 YES 💖";
+return;
+}
+
+let w = window.innerWidth - 120;
+let h = window.innerHeight - 60;
+
+let x, y;
+
+/* EDGE CYCLE MOVEMENT */
+if(pos === 0){ x = 20 + count*25; y = 20; }
+if(pos === 1){ x = w; y = 20 + count*25; }
+if(pos === 2){ x = w - count*25; y = h; }
+if(pos === 3){ x = 20; y = h - count*25; }
+
+pos = (pos + 1) % 4;
+
+no.style.left = x + "px";
+no.style.top = y + "px";
+
+bubble.style.display="block";
+bubble.innerHTML = "Think Again" + "!".repeat(count+1);
+
+count++;
+}
+
+/* START MAIN */
+function startMain(){
+document.getElementById("intro").style.display="none";
+document.getElementById("main").style.display="flex";
+}
+
+/* WISHES */
 const wishes = [
-
-`🎉 Dear Aadit Saru,<br><br>
-Today is your special day and the world feels brighter because you were born.`,
-
-`🎂 Wishing you unlimited happiness, success, health and laughter forever.`,
-
-`🌟 May every dream you dream become reality and every goal become success.`,
-
-`🚀 You are talented, amazing and capable of achieving anything.`,
-
-`💖 May life always bring you joy, peace and love.`,
-
-`🎁 Stay awesome, stay kind and stay legendary forever.`,
-
-`🌈 Keep smiling, keep shining and keep growing.`,
-
-`🎊 Another year stronger, wiser and greater.`,
-
-`✨ You are valuable, loved and meant for greatness.`,
-
-`🎂 HAPPY BIRTHDAY AADIT SARU 🎂<br><br>
-May this year be your best year ever! 🌟`
+"🎉 Happy Birthday Aadit Saru!",
+"🎂 Wishing you endless happiness!",
+"🌟 You are amazing!",
+"🚀 Keep chasing dreams!",
+"💖 Stay blessed always!",
+"🎁 You deserve everything good!",
+"🌈 Keep shining!",
+"🎊 Another great year!",
+"✨ You are special!",
+"🏁 THE END 🎂"
 ];
 
 let i = 0;
-const msg = document.getElementById("message");
+let msg = document.getElementById("message");
 
-function animateText(text){
-msg.classList.remove("text-animate");
-void msg.offsetWidth; /* restart animation */
-msg.innerHTML = text;
-msg.classList.add("text-animate");
-}
-
-function nextWish(){
-
+function next(){
 if(i < wishes.length){
-animateText(wishes[i]);
+msg.classList.remove("text-anim");
+void msg.offsetWidth;
+msg.innerHTML = wishes[i];
+msg.classList.add("text-anim");
 i++;
 }
-
-if(i === wishes.length){
-setTimeout(()=>{
-animateText(`🏁 THE END 🏁<br><br>Hope you loved all the wishes 💖`);
-document.getElementById("mainBtn").innerHTML="Restart 🔄";
-document.getElementById("mainBtn").onclick=restartWishes;
-},800);
-}
 }
 
-function restartWishes(){
-i = 0;
-animateText("Click Next For Birthday Wishes 💖");
-document.getElementById("mainBtn").innerHTML="Next ➜";
-document.getElementById("mainBtn").onclick=nextWish;
-}
-
+/* HEARTS */
 setInterval(()=>{
-let heart=document.createElement("div");
-heart.className="heart";
-heart.innerHTML="💖";
-heart.style.left=Math.random()*100+"vw";
-heart.style.fontSize=(20+Math.random()*20)+"px";
-heart.style.animationDuration=(5+Math.random()*4)+"s";
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),9000);
-},500);
+if(document.getElementById("main").style.display==="flex"){
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="💖";
+h.style.left=Math.random()*100+"vw";
+h.style.fontSize=(18+Math.random()*20)+"px";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),8000);
+}
+},400);
+
 </script>
 
 </body>
